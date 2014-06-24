@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `civicrm_sms_autoreply`;
