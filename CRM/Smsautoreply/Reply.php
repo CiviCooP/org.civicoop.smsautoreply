@@ -37,15 +37,29 @@ class CRM_Smsautoreply_Reply {
    */
   public function post($op, $objectName, $objectId, &$objectRef) {
     CRM_Core_Error::debug_log_message('Post hook');
-    if ($op == 'create' && $objectName == 'Activity' && in_array($objectRef->activity_type_id, $this->validSmsActivities)) {
+    if ($op == 'create' && $objectName == 'Activity') {
       CRM_Core_Error::debug_log_message('Post hook valid activitty: '.$objectRef->subject);
       //check if subject is valid
-      if (in_arrray($objectRef->subject, $this->incomingSmsSubjects)) {
+      if ($this->isValidActivity($objectRef)) {
         //ok this is an incoming sms
         CRM_Core_Error::debug_log_message('Post hook valid subject');
         $this->process($objectRef->details, $objectRef->phone_number, $objectRef->target_contact_id, $objectRef->source_contact_id);
       }
     }
+  }
+  
+  protected function isValidActivity($activity) {
+    if (!in_array($activity->activity_type_id, $this->validSmsActivities)) {
+      return false;
+    }
+    
+    foreach($this->incomingSmsSubjects as $subject) {
+      if ($subject == $activity->subject) {
+        return true;
+      }
+    }
+    
+    return false;;
   }
 
   /**
