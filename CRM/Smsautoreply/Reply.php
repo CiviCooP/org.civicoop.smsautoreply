@@ -77,11 +77,11 @@ class CRM_Smsautoreply_Reply {
     ), TRUE, 'CRM_Smsautoreply_DAO_SmsAutoreply');
 
     while ($replies->fetch()) {
-      $temp = array();
-      CRM_Core_DAO::storeValues($replies, $temp);
-      $str_temp = var_export($temp, true);
+      $data = array();
+      CRM_Core_DAO::storeValues($replies, $data);
+      $str_temp = var_export($data, true);
       CRM_Core_Error::debug_log_message($str_temp);
-      $this->reply($replies->reply, $from_phone, $from_contact_ids, $replies->provider_id, $replies->charge, $replies->financial_type_id, $replies->subject);
+      $this->reply($data['reply'], $from_phone, $from_contact_ids, $data['provider_id'], $data['charge'], $data['financial_type_id'], $data['subject']);
     }
   }
 
