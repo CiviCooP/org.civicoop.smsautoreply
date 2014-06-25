@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+     <path>civicrm/admin/sms/autoreply</path>
+     <title>Sms Autoreplies</title>
+     <desc>To configure a sms autoreplies</desc>
+     <page_callback>CRM_Smsautoreply_Page_Autoreplies</page_callback>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <adminGroup>System Settings</adminGroup>
+     <icon>admin/small/36.png</icon>
+     <weight>500</weight>
+  </item>
+</menu>

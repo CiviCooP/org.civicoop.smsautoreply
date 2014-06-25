@@ -3,6 +3,23 @@
 require_once 'smsautoreply.civix.php';
 
 /**
+ * Implementation of hook_civicrm_post
+ * 
+ * Check if is in incoming SMS 
+ * 
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
+ * @param type $op
+ * @param type $objectName
+ * @param type $objectId
+ * @param type $objectRef
+ */
+function smsautoreply_civicrm_post($op, $objectName, $objectId, &$objectRef ) {
+  //delegate the checking of an incoming sms
+  $autoreply = CRM_Smsautoreply_Reply::singleton();
+  $autoreply->post($op, $objectName, $objectId, $objectRef);
+}
+
+/**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
