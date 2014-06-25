@@ -38,7 +38,7 @@ class CRM_Smsautoreply_Reply {
   public function post($op, $objectName, $objectId, &$objectRef) {
     CRM_Core_Error::debug_log_message('Post hook');
     if ($op == 'create' && $objectName == 'Activity' && in_array($objectRef->activity_type_id, $this->validSmsActivities)) {
-      CRM_Core_Error::debug_log_message('Post hook valid activitty');
+      CRM_Core_Error::debug_log_message('Post hook valid activitty: '.$objectRef->subject);
       //check if subject is valid
       if (in_arrray($objectRef->subject, $this->incomingSmsSubjects)) {
         //ok this is an incoming sms
