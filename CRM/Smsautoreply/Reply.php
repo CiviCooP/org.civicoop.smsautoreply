@@ -77,6 +77,10 @@ class CRM_Smsautoreply_Reply {
     ));
 
     while ($replies->fetch()) {
+      $temp = array();
+      CRM_Core_DAO::storeValues($replies, $temp);
+      $str_temp = var_export($temp, true);
+      CRM_Core_Error::debug_log_message($str_temp);
       $this->reply($replies->reply, $from_phone, $from_contact_ids, $replies->provider_id, $replies->charge, $replies->financial_type_id, $replies->subject);
     }
   }
