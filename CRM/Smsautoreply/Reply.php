@@ -74,7 +74,7 @@ class CRM_Smsautoreply_Reply {
     $sql = 'SELECT * FROM `civicrm_sms_autoreply` WHERE %1 LIKE CONCAT(`keyword`, "%") AND `is_active` = "1"';
     $replies = CRM_Core_DAO::executeQuery($sql, array(
           1 => array($message, 'String'),
-    ));
+    ), TRUE, 'CRM_Smsautoreply_DAO_SmsAutoreply');
 
     while ($replies->fetch()) {
       $temp = array();
