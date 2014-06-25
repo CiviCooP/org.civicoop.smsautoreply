@@ -54,6 +54,9 @@ class CRM_Smsautoreply_Reply {
    * @param type $to_contact_id
    */
   protected function process($message, $from_phone, $from_contact_id, $to_contact_id) {
+    
+    CRM_Core_Error::debug_log_message('Processing autoreplies for '.$message.' from '.$from_phone . ' (cid: '.$from_contact_id.')');
+    
     $sql = 'SELECT * FROM `civicrm_sms_autoreply` WHERE `keyword` %1 LIKE CONCAT(`keyword`, "%") AND `is_active` = "1"';
     $replies = CRM_Core_DAO::executeQuery($sql, array(
           1 => array($message, 'String'),
@@ -76,6 +79,9 @@ class CRM_Smsautoreply_Reply {
    * @param type $financial_type_id
    */
   protected function reply($body, $to_phone, $to_contact_id, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
+    
+    CRM_Core_Error::debug_log_message('Send reply '.$subject.' to '.$to_phone);
+    
     $contact_ids[] = $to_contact_id;
     $contactDetails[] = $this->getContactDetails($to_contact_id, $to_phone);
     $activityParams['text_message'] = $body;
