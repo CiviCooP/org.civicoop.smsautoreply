@@ -57,7 +57,7 @@ class CRM_Smsautoreply_Reply {
     
     CRM_Core_Error::debug_log_message('Processing autoreplies for '.$message.' from '.$from_phone . ' (cid: '.$from_contact_id.')');
     
-    $sql = 'SELECT * FROM `civicrm_sms_autoreply` WHERE `keyword` %1 LIKE CONCAT(`keyword`, "%") AND `is_active` = "1"';
+    $sql = 'SELECT * FROM `civicrm_sms_autoreply` WHERE %1 LIKE CONCAT(`keyword`, "%") AND `is_active` = "1"';
     $replies = CRM_Core_DAO::executeQuery($sql, array(
           1 => array($message, 'String'),
     ));
