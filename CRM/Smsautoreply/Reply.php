@@ -102,6 +102,7 @@ class CRM_Smsautoreply_Reply {
     CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->body);
     
     $contactDetails = $this->getContactDetails($to_contact_ids, $to_phone);
+    CRM_Core_Error::debug_log_message(var_export($contactDetails, true));
     $activityParams['text_message'] = $reply->body;
     $activityParams['activity_subject'] = $reply->subject;
     $smsParams['provider_id'] = $reply->provider_id;
