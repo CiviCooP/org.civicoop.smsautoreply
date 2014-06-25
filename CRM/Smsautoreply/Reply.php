@@ -82,7 +82,7 @@ class CRM_Smsautoreply_Reply {
       $str_temp = var_export($data, true);
       CRM_Core_Error::debug_log_message($str_temp);
       CRM_Core_Error::debug_log_message(var_export($data['subject'], true));
-      $this->reply($data['reply'], $from_phone, $from_contact_ids, $data['provider_id'], $data['charge'], $data['financial_type_id'], $data['subject']);
+      $this->reply($replies, $from_phone, $from_contact_ids, $to_contact_id);//, $data['provider_id'], $data['charge'], $data['financial_type_id'], $data['subject']);
     }
   }
 
@@ -97,19 +97,19 @@ class CRM_Smsautoreply_Reply {
    * @param type $charge
    * @param type $financial_type_id
    */
-  protected function reply($body, $to_phone, $to_contact_ids, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
-    CRM_Core_Error::debug_log_message(var_export($subject, true));
-    CRM_Core_Error::debug_log_message('Send reply '.$subject.' to '.$to_phone .' with body '.$body);
+  protected function reply($reply, $to_phone, $to_contact_ids, $from_contact_id) { //, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
+    CRM_Core_Error::debug_log_message(var_export($reply->subject, true));
+    CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->body);
     
     $contactDetails[] = $this->getContactDetails($to_contact_ids, $to_phone);
-    $activityParams['text_message'] = $body;
-    $activityParams['activity_subject'] = $subject;
-    $smsParams['provider_id'] = $provider_id;
-    if ($charge) {
-      $smsParams['charge'] = $charge;
+    $activityParams['text_message'] = $reply->body;
+    $activityParams['activity_subject'] = $reply->subject;
+    $smsParams['provider_id'] = $reply->provider_id;
+    if ($reply->charge) {
+      $smsParams['charge'] = $reply->charge;
     }
-    if ($financial_type_id) {
-      $smsParams['financial_type_id'] = $financial_type_id;
+    if ($reply->financial_type_id) {
+      $smsParams['financial_type_id'] = $reply->financial_type_id;
     }
 
     list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
