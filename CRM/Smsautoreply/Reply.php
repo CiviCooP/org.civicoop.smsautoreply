@@ -94,7 +94,7 @@ class CRM_Smsautoreply_Reply {
    */
   protected function reply($body, $to_phone, $to_contact_ids, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
     
-    CRM_Core_Error::debug_log_message('Send reply '.$subject.' to '.$to_phone);
+    CRM_Core_Error::debug_log_message('Send reply '.$subject.' to '.$to_phone .' with body '.$body);
     
     $contactDetails[] = $this->getContactDetails($to_contact_ids, $to_phone);
     $activityParams['text_message'] = $body;
