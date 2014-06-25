@@ -3,6 +3,20 @@
 require_once 'smsautoreply.civix.php';
 
 /**
+ * Implementation of hook_civicrm_navigationMenu
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
+ */
+function smsautoreply_civicrm_navigationMenu( &$params ) {  
+  $item = array (
+    "name"=> ts('SMS Autoreplies'),
+    "url"=> "civicrm/admin/sms/autoreply",
+    "permission" => "administer CiviCRM",
+  );
+  _smsautoreply_civix_insert_navigation_menu($params, "Administer/Communications", $item);
+}
+
+/**
  * Implementation of hook_civicrm_post
  * 
  * Check if is in incoming SMS 
