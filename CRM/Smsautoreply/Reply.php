@@ -101,7 +101,7 @@ class CRM_Smsautoreply_Reply {
     CRM_Core_Error::debug_log_message(var_export($reply->subject, true));
     CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->body);
     
-    $contactDetails[] = $this->getContactDetails($to_contact_ids, $to_phone);
+    $contactDetails = $this->getContactDetails($to_contact_ids, $to_phone);
     $activityParams['text_message'] = $reply->body;
     $activityParams['activity_subject'] = $reply->subject;
     $smsParams['provider_id'] = $reply->provider_id;
@@ -112,7 +112,9 @@ class CRM_Smsautoreply_Reply {
       $smsParams['financial_type_id'] = $reply->financial_type_id;
     }
 
-    list($sent, $activityId, $countSuccess) = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
+    $return = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
+    //list($sent, $activityId, $countSuccess) = $return;
+    CRM_Core_Error::debug_log_message(var_export($return, true));
   }
 
   protected function getContactDetails($contactIds, $phone) {
