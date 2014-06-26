@@ -77,12 +77,7 @@ class CRM_Smsautoreply_Reply {
     ), TRUE, 'CRM_Smsautoreply_DAO_SmsAutoreply');
 
     while ($replies->fetch()) {
-      $data = array();
-      CRM_Core_DAO::storeValues($replies, $data);
-      $str_temp = var_export($data, true);
-      CRM_Core_Error::debug_log_message($str_temp);
-      CRM_Core_Error::debug_log_message(var_export($data['subject'], true));
-      $this->reply($replies, $from_phone, $from_contact_ids, $to_contact_id);//, $data['provider_id'], $data['charge'], $data['financial_type_id'], $data['subject']);
+      $this->reply($replies, $from_phone, $from_contact_ids, $to_contact_id);
     }
   }
 
@@ -98,12 +93,9 @@ class CRM_Smsautoreply_Reply {
    * @param type $financial_type_id
    */
   protected function reply($reply, $to_phone, $to_contact_ids, $from_contact_id) { //, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
-    CRM_Core_Error::debug_log_message(var_export($reply->subject, true));
-    CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->body);
-    
+    CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->reply);
     $contactDetails = $this->getContactDetails($to_contact_ids, $to_phone);
-    CRM_Core_Error::debug_log_message(var_export($contactDetails, true));
-    $activityParams['text_message'] = $reply->body;
+    $activityParams['text_message'] = $reply->reply;
     $activityParams['activity_subject'] = $reply->subject;
     $smsParams['provider_id'] = $reply->provider_id;
     if ($reply->charge) {
