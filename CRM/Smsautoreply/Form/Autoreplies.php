@@ -107,7 +107,12 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $this->add('text', 'keyword', ts('Keyword'), $attributes['keyword'], TRUE
     );
 
-    $this->add('textarea', 'reply', ts('Reply'), $attributes['reply'], TRUE
+    $this->add('textarea', 'text_message', ts('Plain-text format'),
+      array(
+        'cols' => '80', 'rows' => '8',
+        'onkeyup' => "return verify(this)",
+      ), 
+     TRUE
     );
     
     $this->add('select', 'provider_id', ts('Provider'), $providers, TRUE);
@@ -117,7 +122,23 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $this->add('text', 'charge', ts('Charge receiver'), $attributes['charge'], FALSE);
     
     $this->add('select', 'financial_type_id', ts('Financial Type'), $financialTypes, FALSE);
+    
+    $tokens = CRM_Core_SelectValues::contactTokens();
+    
+    //sorted in ascending order tokens by ignoring word case
+    natcasesort($tokens);
+    $this->assign('tokens', json_encode($tokens));
+    $this->add('select', 'token1', ts('Insert Tokens'),
+      $tokens, FALSE,
+      array(
+        'size' => "5",
+        'multiple' => TRUE,
+        'onclick' => "return tokenReplText(this);",
+      )
+    );
 
+    $this->assign('max_sms_length', CRM_SMS_Provider::MAX_SMS_CHAR);
+    $this->assign('is_mailing', false);
   }
 
   function setDefaultValues() {
@@ -156,6 +177,8 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
 
     $recData = $values = $this->controller->exportValues($this->_name);
     $recData['is_active'] = CRM_Utils_Array::value('is_active', $recData, 0);
+    $recData['reply'] = $recData['text_message'];
+    unset($recData['text_message']);
     
     if ($this->_action & CRM_Core_Action::UPDATE) {
       CRM_Smsautoreply_BAO_SmsAutoreply::updateRecord($recData, $this->_id);

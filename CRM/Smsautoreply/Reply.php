@@ -106,8 +106,6 @@ class CRM_Smsautoreply_Reply {
     }
 
     $return = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
-    //list($sent, $activityId, $countSuccess) = $return;
-    CRM_Core_Error::debug_log_message(var_export($return, true));
   }
 
   protected function getContactDetails($contactIds, $phone) {

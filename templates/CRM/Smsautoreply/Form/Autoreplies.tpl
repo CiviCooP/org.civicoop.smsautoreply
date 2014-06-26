@@ -15,7 +15,31 @@
         <td class="label">{$form.keyword.label}</td><td>{$form.keyword.html}</td>
     </tr>
     <tr class="crm-sms-autoreply-form-block-reply">
-        <td class="label">{$form.reply.label}</td><td>{$form.reply.html}</td>
+        <td class="label">{$form.reply.label}</td>
+        <td>
+            <div id='char-count-message'></div>
+            <span class="helpIcon" id="helptext">
+                <a href="#" onClick="return showToken('Text', 1);">{$form.token1.label}</a>
+                {help id="id-token-text" file="CRM/Contact/Form/Task/SMS.hlp"}
+                <div id='tokenText' style="display: none">
+                    <input  style="border:1px solid #999999;" type="text" id="filter1" size="20" name="filter1" onkeyup="filter(this, 1)"/><br />
+                    <span class="description">{ts}Begin typing to filter list of tokens{/ts}</span><br/>
+                    {$form.token1.html}
+                </div>
+            </span>
+            <div class="clear"></div>
+            <div class='text'>
+                {$form.text_message.html}
+            </div>
+            {* code below is needed for the insert tookens javascript *}
+            <div id="editMessageDetails"></div>
+            <div id="template"></div>
+            <div id="saveDetails"></div>
+            <div id="updateDetails"></div>
+            <input type="checkbox" name="saveTemplate" style="display: none">
+            <input type="checkbox" name="updateTemplate" style="display: none">
+            <input type="text" name="saveTemplateName" id="saveTemplateName" style="display: none">
+        </td>
     </tr>
     <tr class="crm-sms-autoreply-form-block-provider_id">
         <td class="label">{$form.provider_id.label}</td><td>{$form.provider_id.html}</td>
@@ -35,3 +59,42 @@
        <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
   </fieldset>
 </div>
+
+{include file="CRM/Mailing/Form/InsertTokens.tpl"}
+<script type="text/javascript">
+{literal}
+maxCharInfoDisplay();
+
+cj('#text_message').bind({
+  change: function() {
+   maxLengthMessage();
+  },
+  keyup:  function() {
+   maxCharInfoDisplay();
+  }
+});
+
+function maxLengthMessage()
+{
+   var len = cj('#text_message').val().length;
+   var maxLength = {/literal}{$max_sms_length}{literal};
+   if (len > maxLength) {
+      cj('#text_message').crmError({/literal}'{ts escape="js"}SMS body exceeding limit of 160 characters{/ts}'{literal});
+      return false;
+   }
+return true;
+}
+
+function maxCharInfoDisplay(){
+   var maxLength = {/literal}{$max_sms_length}{literal};
+   var enteredCharLength = cj('#text_message').val().length;
+   var count = maxLength - enteredCharLength;
+
+   if( count < 0 ) {
+      cj('#text_message').val(cj('#text_message').val().substring(0, maxLength));
+      count = 0;
+   }
+   cj('#char-count-message').text( "You can insert upto " + count + " characters" );
+}
+{/literal}
+</script>
