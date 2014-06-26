@@ -44,6 +44,9 @@
     <tr class="crm-sms-autoreply-form-block-provider_id">
         <td class="label">{$form.provider_id.label}</td><td>{$form.provider_id.html}</td>
     </tr>
+    <tr class="crm-sms-autoreply-form-block-weight">
+        <td class="label">{$form.weight.label}</td><td>{$form.weight.html}</td>
+    </tr>
     <tr class="crm-sms-autoreply-form-block-is_active">
         <td></td><td>{$form.is_active.html}&nbsp;{$form.is_active.label}</td>
     </tr>

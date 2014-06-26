@@ -45,7 +45,7 @@ class CRM_Smsautoreply_BAO_SmsAutoreply extends CRM_Smsautoreply_DAO_SmsAutorepl
    * $selectArr array of coloumns to fetch
    * $getActive boolean to get active providers
    */
-  static function getAutoreplies($selectArr = NULL, $filter = NULL, $getActive = TRUE, $orderBy = 'id') {
+  static function getAutoreplies($selectArr = NULL, $filter = NULL, $getActive = TRUE, $orderBy = 'weight,id') {
     $replies = array();
     $temp      = array();
     $dao       = new CRM_Smsautoreply_DAO_SmsAutoreply();

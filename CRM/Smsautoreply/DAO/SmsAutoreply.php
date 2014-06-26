@@ -71,6 +71,10 @@ class CRM_Smsautoreply_DAO_SmsAutoreply extends CRM_Core_DAO {
           'name' => 'financial_type_id',
           'type' => CRM_Utils_Type::T_INT,
         ),
+        'weight' => array(
+          'name' => 'weight',
+          'type' => CRM_Utils_Type::T_INT,
+        ),
       );
     }
     return self::$_fields;
@@ -93,7 +97,8 @@ class CRM_Smsautoreply_DAO_SmsAutoreply extends CRM_Core_DAO {
         'is_active' => 'is_active',
         'provider_id' => 'provider_id',
         'charge' => 'charge',
-        'financial_type_id' => 'financial_type_id'
+        'financial_type_id' => 'financial_type_id',
+        'weight' => 'weight'
       );
     }
     return self::$_fieldKeys;

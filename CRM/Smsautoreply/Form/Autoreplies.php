@@ -119,6 +119,8 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
 
     $this->add('checkbox', 'is_active', ts('Is this autoreply active?'));
     
+    $this->add('select', 'weight', ts('Weight'), $this->getWeights(), TRUE);
+    
     $this->add('text', 'charge', ts('Charge receiver'), $attributes['charge'], FALSE);
     
     $this->add('select', 'financial_type_id', ts('Financial Type'), $financialTypes, FALSE);
@@ -144,7 +146,8 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $defaults = array();
 
     if (!$this->_id) {
-      $defaults['is_active'] = $defaults['is_default'] = 1;
+      $defaults['is_active'] = 1;
+      $defaults['weight'] = 0;
       return $defaults;
     }
 
@@ -202,6 +205,14 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $return[] = ' -- '.ts('Select a financial type').' -- ';
     while($financial_types->fetch()) {
       $return[$financial_types->id] = $financial_types->name;
+    }
+    return $return;
+  }
+  
+  protected function getWeights() {
+    $return = array();
+    for($i=-150; $i < 150; $i++) {
+      $return[$i] = $i;
     }
     return $return;
   }

@@ -9,6 +9,10 @@
         </div>
     {/if}
 
+<div id="help">
+    {ts}The autoreplies are sorted by their weight. When an SMS is received it will match it contents to the keyword and the first match is send back to the sender{/ts}
+</div>
+
     <div id="ltype">
     {strip}
     {* handle enable/disable actions*}
@@ -22,6 +26,7 @@
                 <th >{ts}Provider{/ts}</th>
                 <th >{ts}Charge{/ts}</th>
                 <th >{ts}Financial type{/ts}</th>
+                <th >{ts}Weight{/ts}</th>
                 <th >{ts}Action{/ts}</th>
             </tr>
             {foreach from=$rows item=row}
@@ -32,6 +37,7 @@
                     <td class="crm-autoreply-provider">{$row.provider_id}</td>
                     <td class="crm-autoreply-charge">{$row.charge}</td>
                     <td class="crm-autoreply-financial_type">{$row.financial_type_id}</td>
+                    <td class="crm-autoreply-weight">{$row.weight}</td>
                     <td>{$row.action|replace:'xx':$row.id}</td>
                 </tr>
             {/foreach}
