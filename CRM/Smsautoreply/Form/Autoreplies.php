@@ -138,7 +138,6 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     );
 
     $this->assign('max_sms_length', CRM_SMS_Provider::MAX_SMS_CHAR);
-    $this->assign('is_mailing', false);
   }
 
   function setDefaultValues() {
@@ -157,7 +156,7 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     }
 
     CRM_Core_DAO::storeValues($dao, $defaults);
-
+    $defaults['text_message'] = $dao->reply;
     return $defaults;
   }
 
