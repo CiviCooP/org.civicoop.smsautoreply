@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_sms_autoreply` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` varchar(255) NOT NULL,
   `keyword` varchar(160) NOT NULL,
-  `reply` varchar(255) NOT NULL,
+  `reply` text NULL,
   `provider_id` int(11) DEFAULT NULL,
   `is_active` INT(11) DEFAULT '1',
   `charge` INT(11) DEFAULT NULL,

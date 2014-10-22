@@ -13,4 +13,9 @@ class CRM_Smsautoreply_Upgrader extends CRM_Smsautoreply_Upgrader_Base {
    $this->executeSqlFile('sql/uninstall.sql');
   }
   
+  public function upgrade_1001() {
+    CRM_Core_DAO::executeQuery("ALTER TABLE civicrm_sms_autoreply MODIFY `reply` text NULL;");
+    return true;
+  }
+  
 }

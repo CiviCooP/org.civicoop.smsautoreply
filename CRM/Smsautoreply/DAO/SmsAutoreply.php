@@ -47,9 +47,9 @@ class CRM_Smsautoreply_DAO_SmsAutoreply extends CRM_Core_DAO {
         ),
         'reply' => array(
           'name' => 'reply',
-          'type' => CRM_Utils_Type::T_STRING,
+          'type' => CRM_Utils_Type::T_TEXT,
           'required' => true,
-          'maxlength' => 255,
+          'maxlength' => 804,
           'size' => CRM_Utils_Type::HUGE,
         ),
         'is_active' => array(
