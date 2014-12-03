@@ -40,12 +40,41 @@ class CRM_Smsautoreply_Reply {
       //check if subject is valid
       if ($this->isValidActivity($objectRef)) {
         //ok this is an incoming sms
-        $target_contact_ids = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId($objectRef->id);
+        $target_contact_ids = CRM_Smsautoreply_Reply::retrieveTargetIdsByActivityId($objectRef->id);
         if (count($target_contact_ids)) {
           $this->process($objectRef->details, $objectRef->phone_number, $target_contact_ids, $objectRef->source_contact_id);
         }        
       }
     }
+  }
+
+/**
+   * function to retrieve id of target contact by activity_id
+   *
+   * @param int    $id  ID of the activity
+   *
+   * @return mixed
+   *
+   * @access public
+   *
+   */
+  public static function retrieveTargetIdsByActivityId($activity_id) {
+    $targetArray = array();
+    if (!CRM_Utils_Rule::positiveInteger($activity_id)) {
+      return $targetArray;
+    }
+
+    $sql = '
+            SELECT target_contact_id
+            FROM civicrm_activity_target
+            JOIN civicrm_contact ON target_contact_id = civicrm_contact.id
+            WHERE activity_id = %1
+        ';
+    $target = CRM_Core_DAO::executeQuery($sql, array(1 => array($activity_id, 'Integer')));
+    while ($target->fetch()) {
+      $targetArray[] = $target->target_contact_id;
+    }
+    return $targetArray;
   }
   
   protected function isValidActivity($activity) {
