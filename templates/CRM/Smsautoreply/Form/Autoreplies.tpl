@@ -56,6 +56,12 @@
     <tr class="crm-sms-autoreply-form-block-financial_type_id">
         <td class="label">{$form.financial_type_id.label}</td><td>{$form.financial_type_id.html}</td>
     </tr>
+    <tr class="crm-sms-autoreply-form-block-aksjon_id">
+        <td class="label">{$form.aksjon_id.label}</td><td>{$form.aksjon_id.html}</td>
+    </tr>
+    <tr class="crm-sms-autoreply-form-block-earmarking">
+        <td class="label">{$form.earmarking.label}</td><td>{$form.earmarking.html}</td>
+    </tr>
   </table>
 {/if} 
 </table>

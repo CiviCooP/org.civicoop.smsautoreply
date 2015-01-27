@@ -71,6 +71,20 @@ class CRM_Smsautoreply_DAO_SmsAutoreply extends CRM_Core_DAO {
           'name' => 'financial_type_id',
           'type' => CRM_Utils_Type::T_INT,
         ),
+        'aksjon_id' => array(
+            'name' => 'aksjon_id',
+            'type' => CRM_Utils_Type::T_STRING,
+            'required' => false,
+            'maxlength' => 255,
+            'size' => CRM_Utils_Type::HUGE,
+        ),
+        'earmarking' => array(
+            'name' => 'earmarking',
+            'type' => CRM_Utils_Type::T_STRING,
+            'required' => false,
+            'maxlength' => 255,
+            'size' => CRM_Utils_Type::HUGE,
+        ),
         'weight' => array(
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
@@ -98,6 +112,8 @@ class CRM_Smsautoreply_DAO_SmsAutoreply extends CRM_Core_DAO {
         'provider_id' => 'provider_id',
         'charge' => 'charge',
         'financial_type_id' => 'financial_type_id',
+        'aksjon_id' => 'aksjon_id',
+        'earmarking' => 'earmarking',
         'weight' => 'weight'
       );
     }

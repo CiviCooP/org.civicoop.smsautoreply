@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS `civicrm_sms_autoreply` (
   `is_active` INT(11) DEFAULT '1',
   `charge` INT(11) DEFAULT NULL,
   `financial_type_id` INT(11) DEFAULT NULL,
+  `aksjon_id` varchar(255) NOT NULL DEFAULT '',
+  `earmarking` varchar(255) NOT NULL DEFAULT '',
   `weight` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;

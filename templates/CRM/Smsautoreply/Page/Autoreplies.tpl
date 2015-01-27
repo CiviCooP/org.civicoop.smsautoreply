@@ -26,6 +26,8 @@
                 <th >{ts}Provider{/ts}</th>
                 <th >{ts}Charge{/ts}</th>
                 <th >{ts}Financial type{/ts}</th>
+                <th >{ts}Aksjon ID{/ts}</th>
+                <th >{ts}Earmarking{/ts}</th>
                 <th >{ts}Weight{/ts}</th>
                 <th >{ts}Action{/ts}</th>
             </tr>
@@ -37,6 +39,8 @@
                     <td class="crm-autoreply-provider">{$row.provider_id}</td>
                     <td class="crm-autoreply-charge">{$row.charge}</td>
                     <td class="crm-autoreply-financial_type">{$row.financial_type_id}</td>
+                    <td class="crm-autoreply-aksjon_id">{$row.aksjon_id}</td>
+                    <td class="crm-autoreply-earmarking">{$row.earmarking}</td>
                     <td class="crm-autoreply-weight">{$row.weight}</td>
                     <td>{$row.action|replace:'xx':$row.id}</td>
                 </tr>

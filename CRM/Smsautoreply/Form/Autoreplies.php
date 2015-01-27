@@ -124,6 +124,10 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $this->add('text', 'charge', ts('Charge receiver'), $attributes['charge'], FALSE);
     
     $this->add('select', 'financial_type_id', ts('Financial Type'), $financialTypes, FALSE);
+
+    $this->add('text', 'aksjon_id', ts('Aksjon ID'), $attributes['aksjon_id'], FALSE);
+
+    $this->add('text', 'earmarking', ts('Earmarking'), $attributes['earmarking'], FALSE);
     
     $tokens = CRM_Core_SelectValues::contactTokens();
     

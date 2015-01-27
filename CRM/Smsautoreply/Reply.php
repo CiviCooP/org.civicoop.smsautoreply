@@ -123,6 +123,9 @@ class CRM_Smsautoreply_Reply {
    */
   protected function reply($reply, $to_phone, $to_contact_ids, $from_contact_id) { //, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
     CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->reply);
+
+    $this->setAksjonIdAndEarmarking($reply);
+
     $contactDetails = $this->getContactDetails($to_contact_ids, $to_phone);
     $activityParams['text_message'] = $reply->reply;
     $activityParams['activity_subject'] = $reply->subject;
@@ -135,6 +138,18 @@ class CRM_Smsautoreply_Reply {
     }
 
     $return = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
+  }
+
+  protected function setAksjonIdAndEarmarking($reply) {
+    $statuses = CRM_Extension_System::singleton()->getManager()->getStatuses();
+    if (isset($statuses['no.maf.kid']) && $statuses['no.maf.kid'] == CRM_Extension_Manager::STATUS_INSTALLED) {
+      if (!empty($reply->aksjon_id)) {
+        CRM_kid_AksjonId::setAksjonId($reply->aksjon_id);
+      }
+      if (!empty($reply->earmarking)) {
+        CRM_kid_Earmarking::setEarmarking($reply->earmarking);
+      }
+    }
   }
 
   protected function getContactDetails($contactIds, $phone) {
