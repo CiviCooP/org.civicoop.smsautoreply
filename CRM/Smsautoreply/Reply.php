@@ -65,10 +65,10 @@ class CRM_Smsautoreply_Reply {
     }
 
     $sql = '
-            SELECT target_contact_id
-            FROM civicrm_activity_target
-            JOIN civicrm_contact ON target_contact_id = civicrm_contact.id
-            WHERE activity_id = %1
+            SELECT contact_id
+            FROM civicrm_activity_contact
+            JOIN civicrm_contact ON contact_id = civicrm_contact.id
+            WHERE activity_id = %1 and `record_type_id` = 3
         ';
     $target = CRM_Core_DAO::executeQuery($sql, array(1 => array($activity_id, 'Integer')));
     while ($target->fetch()) {
