@@ -7,7 +7,7 @@ class CRM_Smsautoreply_Reply {
   protected $incomingSmsSubjects = array();
 
   protected function __construct() {
-    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS', 'name');
+    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Inbound SMS', 'name');
     $this->validSmsActivities[] = $activityTypeID;
 
     $this->incomingSmsSubjects[] = 'SMS Received';
@@ -72,20 +72,14 @@ class CRM_Smsautoreply_Reply {
         ';
     $target = CRM_Core_DAO::executeQuery($sql, array(1 => array($activity_id, 'Integer')));
     while ($target->fetch()) {
-      $targetArray[] = $target->target_contact_id;
+      $targetArray[] = $target->contact_id;
     }
     return $targetArray;
   }
   
   protected function isValidActivity($activity) {
-    if (!in_array($activity->activity_type_id, $this->validSmsActivities)) {
-      return false;
-    }
-    
-    foreach($this->incomingSmsSubjects as $subject) {
-      if ($subject == $activity->subject) {
-        return true;
-      }
+    if (in_array($activity->activity_type_id, $this->validSmsActivities)) {
+      return true;
     }
     
     return false;;
