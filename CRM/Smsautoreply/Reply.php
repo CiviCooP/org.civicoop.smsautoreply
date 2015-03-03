@@ -42,7 +42,8 @@ class CRM_Smsautoreply_Reply {
         //ok this is an incoming sms
         $target_contact_ids = CRM_Smsautoreply_Reply::retrieveTargetIdsByActivityId($objectRef->id);
         if (count($target_contact_ids)) {
-          $this->process($objectRef->details, $objectRef->phone_number, $target_contact_ids, $objectRef->source_contact_id);
+            $source_contact_id = CRM_Activity_BAO_Activity::getActivityContact($objectRef->id, 2); //activity source contact
+            $this->process($objectRef->details, $objectRef->phone_number, $target_contact_ids, $source_contact_id);
         }        
       }
     }
