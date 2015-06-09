@@ -7,7 +7,7 @@ class CRM_Smsautoreply_Reply {
   protected $incomingSmsSubjects = array();
 
   protected function __construct() {
-    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'SMS', 'name');
+    $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Inbound SMS', 'name');
     $this->validSmsActivities[] = $activityTypeID;
 
     $this->incomingSmsSubjects[] = 'SMS Received';
@@ -42,7 +42,8 @@ class CRM_Smsautoreply_Reply {
         //ok this is an incoming sms
         $target_contact_ids = CRM_Smsautoreply_Reply::retrieveTargetIdsByActivityId($objectRef->id);
         if (count($target_contact_ids)) {
-          $this->process($objectRef->details, $objectRef->phone_number, $target_contact_ids, $objectRef->source_contact_id);
+            $source_contact_id = CRM_Activity_BAO_Activity::getActivityContact($objectRef->id, 2); //activity source contact
+            $this->process($objectRef->details, $objectRef->phone_number, $target_contact_ids, $source_contact_id);
         }        
       }
     }
@@ -65,27 +66,21 @@ class CRM_Smsautoreply_Reply {
     }
 
     $sql = '
-            SELECT target_contact_id
-            FROM civicrm_activity_target
-            JOIN civicrm_contact ON target_contact_id = civicrm_contact.id
-            WHERE activity_id = %1
+            SELECT contact_id
+            FROM civicrm_activity_contact
+            JOIN civicrm_contact ON contact_id = civicrm_contact.id
+            WHERE activity_id = %1 and `record_type_id` = 3
         ';
     $target = CRM_Core_DAO::executeQuery($sql, array(1 => array($activity_id, 'Integer')));
     while ($target->fetch()) {
-      $targetArray[] = $target->target_contact_id;
+      $targetArray[] = $target->contact_id;
     }
     return $targetArray;
   }
   
   protected function isValidActivity($activity) {
-    if (!in_array($activity->activity_type_id, $this->validSmsActivities)) {
-      return false;
-    }
-    
-    foreach($this->incomingSmsSubjects as $subject) {
-      if ($subject == $activity->subject) {
-        return true;
-      }
+    if (in_array($activity->activity_type_id, $this->validSmsActivities)) {
+      return true;
     }
     
     return false;;
