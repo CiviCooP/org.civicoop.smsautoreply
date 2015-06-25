@@ -185,6 +185,13 @@ class CRM_Smsautoreply_Form_Autoreplies extends CRM_Core_Form {
     $recData['is_active'] = CRM_Utils_Array::value('is_active', $recData, 0);
     $recData['reply'] = $recData['text_message'];
     unset($recData['text_message']);
+
+    if (empty($recData['aksjon_id'])) {
+      $recData['aksjon_id'] = '';
+    }
+    if (empty($recData['earmarking'])) {
+      $recData['earmarking'] = '';
+    }
     
     if ($this->_action & CRM_Core_Action::UPDATE) {
       CRM_Smsautoreply_BAO_SmsAutoreply::updateRecord($recData, $this->_id);
