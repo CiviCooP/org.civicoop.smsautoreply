@@ -23,5 +23,11 @@ class CRM_Smsautoreply_Upgrader extends CRM_Smsautoreply_Upgrader_Base {
     CRM_Core_DAO::executeQuery("ALTER TABLE civicrm_sms_autoreply ADD `earmarking` varchar(255) NOT NULL default '' AFTER `financial_type_id`;");
     return true;
   }
+
+  public function upgrade_1003() {
+    CRM_Core_DAO::executeQuery("ALTER TABLE civicrm_sms_autoreply MODIFY `aksjon_id` varchar(255) NULL default '';");
+    CRM_Core_DAO::executeQuery("ALTER TABLE civicrm_sms_autoreply MODIFY `earmarking` varchar(255) NULL default '';");
+    return true;
+  }
   
 }
