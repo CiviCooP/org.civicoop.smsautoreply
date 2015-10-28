@@ -97,7 +97,7 @@ class CRM_Smsautoreply_Reply {
   protected function process($message, $from_phone, $from_contact_ids, $to_contact_id) {    
     $sql = 'SELECT * FROM `civicrm_sms_autoreply` WHERE %1 LIKE CONCAT(`keyword`, "%") AND `is_active` = "1" ORDER BY `weight`, `id` LIMIT 0,1';
     $replies = CRM_Core_DAO::executeQuery($sql, array(
-          1 => array($message, 'String'),
+          1 => array(html_entity_decode($message), 'String'),
     ), TRUE, 'CRM_Smsautoreply_DAO_SmsAutoreply');
 
     while ($replies->fetch()) {
