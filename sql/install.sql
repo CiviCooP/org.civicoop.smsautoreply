@@ -12,3 +12,10 @@ CREATE TABLE IF NOT EXISTS `civicrm_sms_autoreply` (
   `weight` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+CREATE TABLE IF NOT EXISTS `civicrm_sms_autoreply_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` DATETIME NULL DEFAULT NULL,
+  `data` text NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

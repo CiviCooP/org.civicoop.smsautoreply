@@ -3,6 +3,9 @@
 class CRM_Smsautoreply_Reply {
 
   protected static $instance;
+
+  protected static $is_kid_extension_installed = -1;
+
   protected $validSmsActivities = array();
   protected $incomingSmsSubjects = array();
 
@@ -108,43 +111,75 @@ class CRM_Smsautoreply_Reply {
   /**
    * Send a reply
    * 
-   * @param type $body
+   * @param type $reply
    * @param type $to_phone
-   * @param type $to_contact_id
-   * @param type $provider_id
+   * @param type $to_contact_ids
    * @param type $from_contact_id
-   * @param type $charge
-   * @param type $financial_type_id
    */
   protected function reply($reply, $to_phone, $to_contact_ids, $from_contact_id) { //, $provider_id, $from_contact_id, $charge, $financial_type_id, $subject) {
-    CRM_Core_Error::debug_log_message('Send reply '.$reply->subject.' to '.$to_phone .' with body '.$reply->reply);
+    $data['reply'] = $reply->reply;
+    $data['subject'] = $reply->subject;
+    $data['provider_id'] = $reply->provider_id;
+    $data['aksjon_id'] = $reply->aksjon_id;
+    $data['earmarking'] = $reply->earmarking;
+    $data['to_phone'] = $to_phone;
+    $data['to_contact_ids'] = $to_contact_ids;
+    $data['from_contact_id'] = $from_contact_id;
+    $data['charge'] = $reply->charge;
+    $data['financial_type_id'] = $reply->financial_type_id;
 
-    $this->setAksjonIdAndEarmarking($reply);
+    $strData = serialize($data);
+    CRM_Core_DAO::executeQuery("INSERT INTO `civicrm_sms_autoreply_queue` (date, data) VALUES(NOW(), %1)", array(1 => array($strData, 'String')));
+  }
 
-    $contactDetails = $this->getContactDetails($to_contact_ids, $to_phone);
-    $activityParams['text_message'] = $reply->reply;
-    $activityParams['activity_subject'] = $reply->subject;
-    $smsParams['provider_id'] = $reply->provider_id;
-    if ($reply->charge) {
-      $smsParams['charge'] = $reply->charge;
+  public function processQueue($limit) {
+    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM `civicrm_sms_autoreply_queue` ORDER BY `date` ASC LIMIT %1", array(1=>array($limit, 'Integer')));
+    $processed = array();
+    while($dao->fetch()) {
+      $processed[] = $dao->id;
+      try {
+        $data = unserialize($dao->data);
+
+        $this->setAksjonIdAndEarmarking($data);
+        $contactDetails = $this->getContactDetails($data['to_contact_ids'], $data['to_phone']);
+        $activityParams['text_message'] = $data['reply'];
+        $activityParams['activity_subject'] = $data['subject'];
+        $smsParams['provider_id'] = $data['provider_id'];
+        if ($data['charge']) {
+          $smsParams['charge'] = $data['charge'];
+        }
+        if ($data['financial_type_id']) {
+          $smsParams['financial_type_id'] = $data['financial_type_id'];
+        }
+        CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $data['to_contact_ids'], $data['from_contact_id']);
+      } catch (Exception $e) {
+        CRM_Core_Error::debug_log_message('Error in processing sending autoreply: ' . $e->getMessage() . "\r\n\r\n" . $e->getTraceAsString());
+      }
     }
-    if ($reply->financial_type_id) {
-      $smsParams['financial_type_id'] = $reply->financial_type_id;
-    }
-
-    $return = CRM_Activity_BAO_Activity::sendSMS($contactDetails, $activityParams, $smsParams, $to_contact_ids, $from_contact_id);
+    CRM_Core_DAO::executeQuery("DELETE FROM `civicrm_sms_autoreply_queue` WHERE id IN (".implode(", ", $processed).")");
   }
 
   protected function setAksjonIdAndEarmarking($reply) {
-    $statuses = CRM_Extension_System::singleton()->getManager()->getStatuses();
-    if (isset($statuses['no.maf.kid']) && $statuses['no.maf.kid'] == CRM_Extension_Manager::STATUS_INSTALLED) {
-      if (!empty($reply->aksjon_id)) {
-        CRM_kid_AksjonId::setAksjonId($reply->aksjon_id);
+    if (self::isKidExtensionInstalled()) {
+      if (!empty($reply['aksjon_id'])) {
+        CRM_kid_AksjonId::setAksjonId($reply['aksjon_id']);
       }
-      if (!empty($reply->earmarking)) {
-        CRM_kid_Earmarking::setEarmarking($reply->earmarking);
+      if (!empty($reply['earmarking'])) {
+        CRM_kid_Earmarking::setEarmarking($reply['earmarking']);
       }
     }
+  }
+
+  protected static function isKidExtensionInstalled() {
+    if (self::$is_kid_extension_installed === -1) {
+      $statuses = CRM_Extension_System::singleton()->getManager()->getStatuses();
+      self::$is_kid_extension_installed = false;
+      if (isset($statuses['no.maf.kid']) && $statuses['no.maf.kid'] == CRM_Extension_Manager::STATUS_INSTALLED) {
+        self::$is_kid_extension_installed = true;
+      }
+    }
+
+    return self::$is_kid_extension_installed;
   }
 
   protected function getContactDetails($contactIds, $phone) {
