@@ -120,8 +120,6 @@ class CRM_Smsautoreply_Reply {
     $data['reply'] = $reply->reply;
     $data['subject'] = $reply->subject;
     $data['provider_id'] = $reply->provider_id;
-    $data['aksjon_id'] = $reply->aksjon_id;
-    $data['earmarking'] = $reply->earmarking;
     $data['to_phone'] = $to_phone;
     $data['to_contact_ids'] = $to_contact_ids;
     $data['from_contact_id'] = $from_contact_id;
@@ -140,7 +138,6 @@ class CRM_Smsautoreply_Reply {
       try {
         $data = unserialize($dao->data);
 
-        $this->setAksjonIdAndEarmarking($data);
         $contactDetails = $this->getContactDetails($data['to_contact_ids'], $data['to_phone']);
         $activityParams['text_message'] = $data['reply'];
         $activityParams['activity_subject'] = $data['subject'];
@@ -159,29 +156,6 @@ class CRM_Smsautoreply_Reply {
     if (count($processed) > 0) {
       CRM_Core_DAO::executeQuery("DELETE FROM `civicrm_sms_autoreply_queue` WHERE id IN (" . implode(", ", $processed) . ")");
     }
-  }
-
-  protected function setAksjonIdAndEarmarking($reply) {
-    if (self::isKidExtensionInstalled()) {
-      if (!empty($reply['aksjon_id'])) {
-        CRM_kid_AksjonId::setAksjonId($reply['aksjon_id']);
-      }
-      if (!empty($reply['earmarking'])) {
-        CRM_kid_Earmarking::setEarmarking($reply['earmarking']);
-      }
-    }
-  }
-
-  protected static function isKidExtensionInstalled() {
-    if (self::$is_kid_extension_installed === -1) {
-      $statuses = CRM_Extension_System::singleton()->getManager()->getStatuses();
-      self::$is_kid_extension_installed = false;
-      if (isset($statuses['no.maf.kid']) && $statuses['no.maf.kid'] == CRM_Extension_Manager::STATUS_INSTALLED) {
-        self::$is_kid_extension_installed = true;
-      }
-    }
-
-    return self::$is_kid_extension_installed;
   }
 
   protected function getContactDetails($contactIds, $phone) {
