@@ -156,7 +156,9 @@ class CRM_Smsautoreply_Reply {
         CRM_Core_Error::debug_log_message('Error in processing sending autoreply: ' . $e->getMessage() . "\r\n\r\n" . $e->getTraceAsString());
       }
     }
-    CRM_Core_DAO::executeQuery("DELETE FROM `civicrm_sms_autoreply_queue` WHERE id IN (".implode(", ", $processed).")");
+    if (count($processed) > 0) {
+      CRM_Core_DAO::executeQuery("DELETE FROM `civicrm_sms_autoreply_queue` WHERE id IN (" . implode(", ", $processed) . ")");
+    }
   }
 
   protected function setAksjonIdAndEarmarking($reply) {
