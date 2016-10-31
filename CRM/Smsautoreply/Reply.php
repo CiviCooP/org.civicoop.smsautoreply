@@ -9,11 +9,21 @@ class CRM_Smsautoreply_Reply {
   protected $validSmsActivities = array();
   protected $incomingSmsSubjects = array();
 
+  protected static $enabled = true;
+
   protected function __construct() {
     $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'Inbound SMS', 'name');
     $this->validSmsActivities[] = $activityTypeID;
 
     $this->incomingSmsSubjects[] = 'SMS Received';
+  }
+
+  public static function disable() {
+    self::$enabled = false;
+  }
+
+  public static function enable() {
+    self::$enabled = true;
   }
 
   /**
@@ -39,7 +49,7 @@ class CRM_Smsautoreply_Reply {
    * @param type $objectRef
    */
   public function post($op, $objectName, $objectId, &$objectRef) {
-    if ($op == 'create' && $objectName == 'Activity') {
+    if ($op == 'create' && $objectName == 'Activity' && self::$enabled) {
       //check if subject is valid
       if ($this->isValidActivity($objectRef)) {
         //ok this is an incoming sms
